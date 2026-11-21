@@ -13,7 +13,7 @@ window.BOEKENKAST = {
   // Link naar de Google Sheet, gepubliceerd als CSV.
   // Laat leeg ("") om de reservelijst in data/boeken.js te gebruiken.
   // Zie HANDLEIDING.md, stap 3.
-  sheetCsvUrl: "",
+  sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTJWvY01E8oQDF0iPfpSohw7Oz7ku2B0JGG8z3uzpFhzrkWsUTQQlern94Wfx0XvkgsMhbf9flmjE_1/pub?gid=0&single=true&output=csv",
 
   // Bestelinformatie onderaan de pagina
   betaling: "Overschrijving of contant bij afhaling",
