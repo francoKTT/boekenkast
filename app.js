@@ -211,7 +211,7 @@
 
   /* Matrix */
   function kaart(b, i) {
-    const c = el("article", "card" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " verkocht" : ""));
+    const c = el("article", "card" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " niet te koop" : ""));
     c.style.setProperty("--c", kleur(b.rubriek));
     c.style.animationDelay = Math.min(i, 20) * 18 + "ms";
     const cv = omslag(b); cv.onclick = () => detail(b); c.appendChild(cv);
@@ -227,7 +227,7 @@
 
   /* Lijst */
   function rij(b) {
-    const r = el("div", "rij" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " verkocht" : ""));
+    const r = el("div", "rij" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " niet te koop" : ""));
     r.style.setProperty("--c", kleur(b.rubriek));
     const cv = omslag(b); cv.onclick = () => detail(b); r.appendChild(cv);
     const t = el("div", "rij-tekst");
@@ -244,7 +244,7 @@
   function rug(b) {
     const h = hash(b.id);
     const w = el("div", "rug-slot");
-    const r = el("button", "rug" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " verkocht" : ""));
+    const r = el("button", "rug" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " niet te koop" : ""));
     r.style.setProperty("--c", kleur(b.rubriek));
     r.style.setProperty("--w", 30 + (h % 22) + "px");
     r.style.setProperty("--hh", 150 + (h % 50) + "px");
