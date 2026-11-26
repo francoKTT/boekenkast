@@ -202,7 +202,7 @@
 
   function prijsEl(b) { return b.prijs != null ? el("span", "prijs", euro(b.prijs)) : el("span", "prijs vraag", "Prijs op aanvraag"); }
   function knopEl(b) {
-    if (b.verkocht) return el("span", "badge-sold", "Verkocht");
+    if (b.verkocht) return el("span", "badge-sold", "Niet te koop");
     const k = el("button", "add", mand.has(b.id) ? "✓ In mandje" : "+ In mandje");
     k.onclick = (e) => { e.stopPropagation(); wissel(b.id); };
     return k;
