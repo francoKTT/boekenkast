@@ -53,24 +53,37 @@
   }
   const euro = (n) => "€ " + n.toFixed(2).replace(".", ",");
 
+  // Rubrieken met verschillende hoofdletters (sport, Sport, SPORT) worden één rubriek
+  const rubriekNamen = {};
+  function rubriekNaam(r) {
+    let t = (r || "Overig").trim().replace(/\s+/g, " ") || "Overig";
+    if (t === t.toUpperCase() && t.length > 3) t = t.toLowerCase();
+    t = t.charAt(0).toUpperCase() + t.slice(1);
+    const k = t.toLowerCase();
+    if (!rubriekNamen[k]) rubriekNamen[k] = t;
+    return rubriekNamen[k];
+  }
+
   function normaliseer(lijst) {
     const gezien = {};
     return lijst.filter((b) => (b.titel || "").trim()).map((b) => {
       const basis = (b.titel + "|" + (b.isbn || "")).toLowerCase();
       gezien[basis] = (gezien[basis] || 0) + 1;
-      const v = (b.verkocht || "").toLowerCase().trim();
+      // Kolom "verkocht" of "niet te koop": "ja" = niet tonen op de website
+      const kol = Object.keys(b).find((k) => k.includes("koop") || k.includes("verkocht"));
+      const v = ((kol && b[kol]) || "").toLowerCase().trim();
       return {
         id: basis + "#" + gezien[basis],
-        rubriek: (b.categorie || b.rubriek || "Overig").trim() || "Overig",
+        rubriek: rubriekNaam(b.categorie || b.rubriek),
         titel: b.titel.trim(),
         auteur: (b.auteur || "").trim(),
         uitgever: (b.uitgever || "").trim(),
         isbn: (b.isbn || "").trim(),
         prijs: prijsGetal(b.prijs),
         foto: (b.foto || "").trim(),
-        verkocht: ["ja", "x", "verkocht", "yes", "1", "true"].includes(v)
+        verkocht: ["ja", "x", "verkocht", "niet te koop", "yes", "1", "true"].includes(v)
       };
-    });
+    }).filter((b) => !b.verkocht);
   }
 
   async function laadBoeken() {
@@ -211,7 +224,7 @@
 
   /* Matrix */
   function kaart(b, i) {
-    const c = el("article", "card" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " niet te koop" : ""));
+    const c = el("article", "card" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " verkocht" : ""));
     c.style.setProperty("--c", kleur(b.rubriek));
     c.style.animationDelay = Math.min(i, 20) * 18 + "ms";
     const cv = omslag(b); cv.onclick = () => detail(b); c.appendChild(cv);
@@ -227,7 +240,7 @@
 
   /* Lijst */
   function rij(b) {
-    const r = el("div", "rij" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " niet te koop" : ""));
+    const r = el("div", "rij" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " verkocht" : ""));
     r.style.setProperty("--c", kleur(b.rubriek));
     const cv = omslag(b); cv.onclick = () => detail(b); r.appendChild(cv);
     const t = el("div", "rij-tekst");
@@ -244,7 +257,7 @@
   function rug(b) {
     const h = hash(b.id);
     const w = el("div", "rug-slot");
-    const r = el("button", "rug" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " niet te koop" : ""));
+    const r = el("button", "rug" + (mand.has(b.id) ? " gekozen" : "") + (b.verkocht ? " verkocht" : ""));
     r.style.setProperty("--c", kleur(b.rubriek));
     r.style.setProperty("--w", 30 + (h % 22) + "px");
     r.style.setProperty("--hh", 150 + (h % 50) + "px");
